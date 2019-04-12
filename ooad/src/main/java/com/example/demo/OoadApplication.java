@@ -9,7 +9,6 @@ public class OoadApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(OoadApplication.class, args);
 		
-		
 	}
 
 }
