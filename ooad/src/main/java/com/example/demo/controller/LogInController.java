@@ -1,5 +1,8 @@
 package com.example.demo.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dao.*;
@@ -23,6 +27,9 @@ public class LogInController {
 	
 	@Autowired
 	JobDAO jdao;
+	
+	@Autowired
+	ApplicationDAO adao;
 
 	@GetMapping("/users")
 	public List<Login> getUsers() {
@@ -61,8 +68,36 @@ public class LogInController {
 		return jobs;
 	}
 	
-//	@PostMapping(path="/application/")
-//	public Application addApplication()
+	@PostMapping(path="/application")
+	public Application addApplication(@RequestParam("application_id") String applicationId,
+							   @RequestParam("job_id") String jobId,
+							   @RequestParam("candidate_id") String candidateId,
+							   @RequestParam("company_id") String companyId,
+							   @RequestParam("creation_date") String creationDate,
+							   @RequestParam("status") String status) throws ParseException
+	{
+		
+		int appId = Integer.parseInt(applicationId);
+		int jId = Integer.parseInt(jobId);
+		int canId = Integer.parseInt(candidateId);
+		int comId = Integer.parseInt(companyId);
+		Date date = new SimpleDateFormat("dd/MM/yyyy").parse(creationDate);
+		
+		System.out.println(appId + "-----" + jId + "--------" + canId + "-----------" + comId + "-------------" + date + "------");
+		
+		Application app = new Application();
+		
+		//app.setApplicationId(appId);
+		app.setCandidateId(canId);
+		app.setCompanyId(comId);
+		app.setCreationDate(date);
+		app.setJobId(jId);
+		app.setStatus(status);
+		
+		adao.save(app);
+		
+		return app;
+	}
 
 
 	@PostMapping(path="/users")//,consumes="{application/json}")
