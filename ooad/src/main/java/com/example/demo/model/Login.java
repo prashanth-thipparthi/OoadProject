@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -11,28 +12,35 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Login {
 	
 	@Id
-	private long id;
-	private String uname;
-	private String pword;
+	@GeneratedValue
+	private int id;
+	private String username;
+	private String password;
+	private boolean flag;
 	
-	
-	public long getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getUsername() {
-		return uname;
+		return username;
 	}
 	public void setUsername(String username) {
-		this.uname = username;
+		this.username = username;
 	}
 	public String getPassword() {
-		return pword;
+		return password;
 	}
 	public void setPassword(String password) {
-		this.pword = password;
+		this.password = password;
+	}
+	public boolean isFlag() {
+		return flag;
+	}
+	public void setFlag(boolean flag) {
+		this.flag = flag;
 	}
 	
 	
