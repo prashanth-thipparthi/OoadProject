@@ -5,20 +5,26 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-@Entity
+@Entity(name = "companies")
 @Table(name = "companies")
 public class Company {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int company_id;
 	
 	private String companyname;
 	private String description;
+	
+	@OneToOne
+	@JoinColumn(name="username")
+	private Login user;
 	
 	public String getCompanyname() {
 		return companyname;
@@ -31,6 +37,13 @@ public class Company {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Login getUser() {
+		return user;
+	}
+	public void setUser(Login user) {
+		this.user = user;
 	}
 	
 }
