@@ -2,10 +2,19 @@ package com.example.demo.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.NamedQuery;
+import javax.persistence.PersistenceContext;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +40,20 @@ public class LogInController {
 	@Autowired
 	ApplicationDAO adao;
 
+	@Autowired
+	CompanyDAO cdao;
+	
+	@Autowired
+	CandidateDAO candao;
+	
+	@Autowired
+	SampleDAO samdao;
+	
+	
+	@PersistenceContext
+	public EntityManager em;
+	
+	
 	@GetMapping("/users")
 	public List<Login> getUsers() {
 		
@@ -54,44 +77,136 @@ public class LogInController {
 		return users;
 	}
 	
-	//@RequestMapping(path="users/{userid}",produces={"application/xml"})
-	@GetMapping("/users/{userid}")
-	public Optional<Login> getUsers(@PathVariable("userid") int userid) {
-			return dao.findById(userid);	
+//	//@RequestMapping(path="users/{userid}",produces={"application/xml"})
+//	@GetMapping("/users/{userid}")
+//	public Optional<Login> getUsers(@PathVariable("userid") int userid) {
+//			return dao.findById(userid);	
+//	}
+//	
+	
+	@GetMapping("candidates")
+	public List<Candidate> getCandidates(@RequestParam("skills") String skills)
+	{
+		List<String> requestedSkills = Arrays.asList(skills.split(","));
+		List<Candidate> filterBySkills = new ArrayList<Candidate>();
+		List<Candidate> candidates = candao.findAll();
+		System.out.println("Reached here");
+		
+		for(Candidate can: candidates)
+		{
+			System.out.println("CAN SKILLS " + can.getCandidatename());
+			if (can.getSkills() == null)
+				continue;
+			
+			List<String> canSkills = Arrays.asList(can.getSkills().toLowerCase().split(","));
+			System.out.println(can.getSkills().toLowerCase());
+			
+			boolean flag = false;
+			
+			for (String rs : requestedSkills)
+			{
+				if (canSkills.contains(rs.toLowerCase()) == true)
+				{
+					flag = true;
+					break;
+				}
+			}
+			
+			if (flag == true)
+				filterBySkills.add(can);
+					
+		}
+		
+		return filterBySkills;
 	}
 	
-
+	
 	@GetMapping("jobs")
-	public List<Job> getJobs() {
+	public List<Job> getJobs(@RequestParam("skills") String skills, 
+							 @RequestParam("role") String role) {
 		
-		List<Job> jobs = (List<Job>)jdao.findAll();
-		return jobs;
+		
+		List<String> requestedRoles = Arrays.asList(role.split(","));
+		String rolesQuery = " ( ";
+		int i;
+		String mainQuery = "FROM jobs j WHERE ";
+		for (i=0; i<requestedRoles.size()-1;i++) {
+			rolesQuery += " j.job_role='" + requestedRoles.get(i).toUpperCase() + "' OR ";
+		}
+		rolesQuery += " j.job_role='" + requestedRoles.get(i) +"')";
+		
+//		String skillsQuery = " (string_to_array(j.jobskills, ',') && array[";
+//		
+//		//List<Job> jobs = (List<Job>)jdao.findAll();
+//		
+//		int j;
+//		for(j=0; j<requestedSkills.size()-1; j++)
+//		{
+//			skillsQuery += "'" + requestedSkills.get(j) + "',";
+//		}
+//		skillsQuery += "'" + requestedSkills.get(j) + "'])";
+		
+		mainQuery += rolesQuery;
+		
+		List<Job> queriedJobs = (List<Job>) em.createQuery(mainQuery).getResultList();
+		
+		
+		List<String> requestedSkills = Arrays.asList(skills.split(","));
+		List<Job> filterBySkills = new ArrayList<Job>();
+		
+		for(Job job:queriedJobs) {
+			List<String> jobSkills = Arrays.asList(job.getJobSkills().toLowerCase().split(","));
+			boolean flag = false;
+//			System.out.println("------------------------------------------------------");
+//			for (String js: jobSkills)
+//				System.out.println("JS : " + js);
+//			for (String rs: requestedSkills)
+//				System.out.println("RS : " + rs);
+//			System.out.println("------------------------------------------------------");
+
+			for(String rs:requestedSkills)
+			{
+				if (jobSkills.contains(rs.toLowerCase()) == true)
+				{
+					flag = true;
+					break;
+				}
+			}
+			if (flag == true) {
+				filterBySkills.add(job);
+			}
+				
+		}
+		
+
+		return filterBySkills;
 	}
 	
 	@PostMapping(path="/application")
 	public Application addApplication(@RequestParam("application_id") String applicationId,
 							   @RequestParam("job_id") String jobId,
 							   @RequestParam("candidate_id") String candidateId,
-							   @RequestParam("company_id") String companyId,
 							   @RequestParam("creation_date") String creationDate,
 							   @RequestParam("status") String status) throws ParseException
 	{
 		
 		int appId = Integer.parseInt(applicationId);
-		int jId = Integer.parseInt(jobId);
-		int canId = Integer.parseInt(candidateId);
-		int comId = Integer.parseInt(companyId);
+		long jId = Integer.parseInt(jobId); //done
+		int canId = Integer.parseInt(candidateId); //done
 		Date date = new SimpleDateFormat("dd/MM/yyyy").parse(creationDate);
 		
-		System.out.println(appId + "-----" + jId + "--------" + canId + "-----------" + comId + "-------------" + date + "------");
+		System.out.println(appId + "-----" + jId + "--------" + canId + "------------------------" + date + "------");
 		
 		Application app = new Application();
 		
 		//app.setApplicationId(appId);
-		app.setCandidateId(canId);
-		app.setCompanyId(comId);
+		Candidate candi = candao.getOne(canId);
+		Job j = jdao.getOne(jId);
+		
+		app.setCandidate(candi);
+		app.setJob(j);
+		
 		app.setCreationDate(date);
-		app.setJobId(jId);
 		app.setStatus(status);
 		
 		adao.save(app);
@@ -99,26 +214,160 @@ public class LogInController {
 		return app;
 	}
 
+	@PostMapping(path="/sample")
+	public Sample addSample(@RequestParam("sample_id") String sampleId,
+							   @RequestParam("company_id") String companyId) throws ParseException
+	{
+		
+		int samId = Integer.parseInt(sampleId);
+		
+		int comId = Integer.parseInt(companyId);
+		
+		System.out.println(samId + "-----" + "-----------" + comId + "-------------");
+		
+		Sample sam = new Sample();
+		
+		//sam.setSampleId(samId);
+		Company comp = cdao.getOne(comId);
+		sam.setCompanyObj(comp);
+	
+		
+		samdao.save(sam);
+		
+		return sam;
+	}
 
-	@PostMapping(path="/users")//,consumes="{application/json}")
-	public Login addUser(@RequestBody Login user) {
-		dao.save(user);
-		return user;
+	@GetMapping(path="/signin")
+	public Object getUser(@RequestParam("username") String username, 
+									  @RequestParam("password") String password) {
+		
+		Object ret = null;
+		
+		if (dao.existsById(username) == true)
+		{
+			Login requestedUser = dao.findById(username).get();
+			if (requestedUser.getPassword().equals(password))
+			{
+				if (requestedUser.isFlag() == true)
+				{
+					//candidate
+					//String canReqString = "FROM candidates c WHERE c.username = :userObject";
+					//ret = em.createQuery("FROM candidates c WHERE c.username = :userObject").setParameter("userObject", requestedUser).getSingleResult();
+					List<Candidate> cands = candao.findAll();
+					for (Candidate cand : cands)
+					{
+						if (cand.getUser() == requestedUser) {
+							ret = cand;
+							break;
+						}
+					}
+				}
+				else
+				{
+					//company
+					//String comReqString = "FROM companies com WHERE com.username = :userObject";
+					//ret = em.createQuery(comReqString).setParameter("userObject", requestedUser).getSingleResult();
+					List<Company> comps = cdao.findAll();
+					for (Company comp : comps)
+					{
+						if (comp.getUser() == requestedUser) {
+							ret = comp;
+							break;
+						}
+					}
+					
+				}
+			}
+		}
+		else
+		{
+			return ret;
+		}
+		
+		
+		return ret;
 	}
 	
-	@PutMapping(path="/users")//,consumes="{application/json}")
-	public Login saveOrAddUser(@RequestBody Login user) {
-		dao.save(user);
+	@PostMapping(path="/signup")//,consumes="{application/json}")
+	public Login addUser(@RequestParam("username") String username,
+						 @RequestParam("password") String password, 
+						 @RequestParam("flag") String flag,
+						 @RequestParam("name") String name,
+						 @RequestParam("skills") String skills,
+						 @RequestParam("descr") String descr) {
+		
+	
+		
+		String qlString = "FROM login l WHERE l.username=" + username;
+		boolean notFound = true;
+		Login user = null;
+			
+		if (dao.existsById(username) == false)
+		{
+			user = new Login();
+			if (flag.equals("candidate"))
+			{
+				user.setFlag(true);
+			}
+			else {
+				user.setFlag(false);
+			}
+			user.setPassword(password);
+			user.setUsername(username);
+			dao.save(user);
+			System.out.println("FLAG is " + flag);
+			if (flag.equals("candidate"))
+			{
+				System.out.println("Candidate section");
+				Candidate can = new Candidate();
+				can.setCandidatename(name);
+				can.setSkills(skills);
+				can.setDescription(descr);
+				can.setUser(user);
+				candao.save(can);
+				
+			}
+			else
+			{
+				System.out.println("Company section");
+				Company com = new Company();
+				com.setCompanyname(name);
+				com.setDescription(descr);
+				com.setUser(user);
+				cdao.save(com);
+			}
+			
+		}
+		else {
+			System.out.println("This user already exists");
+		}
 		return user;
+		
 	}
 	
-	@DeleteMapping("/users/{userid}")
-	public String deleteUser(@PathVariable("userid") int userid) {
+//	@PutMapping(path="/users")//,consumes="{application/json}")
+//	public Login saveOrAddUser(@RequestBody Login user) {
+//		dao.save(user);
+//		return user;
+//	}
+	
+	@DeleteMapping("/deleteUser")
+	public String deleteUser(@RequestParam("username") String username) {
 		//return dao.findById(userid);
-		Login user = dao.getOne(userid);
-		dao.delete(user);		
-		return "deleted";
+//		Login user = dao.getOne(userid);
+//		dao.delete(user);	
+		
+		String deleteMessage = "Cannot delete as the user " + username + " doesn't exist"; 
+		if (dao.existsById(username) == true) {
+			System.out.println("The user " + username + " exists. Going to delete ....");
+			Login user = dao.getOne(username);
+			dao.delete(user);
+			deleteMessage = "The user " + username + " deleted.";
+		}
+		
+		return deleteMessage;
 	}
 
 	
 }
+;
