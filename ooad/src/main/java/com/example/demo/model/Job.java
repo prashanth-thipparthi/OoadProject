@@ -2,11 +2,14 @@ package com.example.demo.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-@Entity
+@Entity(name = "jobs")
 @Table(name = "jobs")
 public class Job {
 	
@@ -16,6 +19,10 @@ public class Job {
 	private String joblocation;
 	private String jobdescription;
 	private String job_role;
+	
+	@ManyToOne
+	@JoinColumn(name="company_id")
+	private Company companyObj;
 	
 	/*Getter and Setter for JobID*/ 
 	public long getJobId()
