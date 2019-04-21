@@ -1,0 +1,1 @@
+﻿alter table public.candidates drop constraint candidates_description_key;

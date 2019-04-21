@@ -1,0 +1,11 @@
+﻿alter table public.login add column account_id integer;
+
+alter table public.candidates add column account_id integer, 
+add column first_name character varying(50), 
+add column last_name character varying(50),
+add constraint candidates_account_id_fkey foreign key(account_id) references public.login(id) match simple 
+on update cascade on delete cascade;
+
+alter table public.companies add column account_id integer, 
+add constraint companies_account_id_fkey foreign key(account_id) references public.login(id) match simple 
+on update cascade on delete cascade;

@@ -1,0 +1,78 @@
+﻿CREATE TABLE public.login
+(
+  username character varying(50) NOT NULL,
+  password character varying(50) NOT NULL,
+  flag boolean NOT NULL,
+  CONSTRAINT login_pkey PRIMARY KEY (username),
+  CONSTRAINT login_username_key UNIQUE (username)
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE TABLE public.companies
+(
+  company_id integer NOT NULL DEFAULT nextval('companies_company_id_seq'::regclass),
+  companyname character varying(50) NOT NULL,
+  description character varying(50),
+  username character varying(50),
+  CONSTRAINT companies_pkey PRIMARY KEY (company_id),
+  CONSTRAINT companies_username_fkey FOREIGN KEY (username)
+      REFERENCES public.login (username) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE TABLE public.candidates
+(
+  candidate_id integer NOT NULL DEFAULT nextval('candidates_candidate_id_seq'::regclass),
+  description character varying(50) NOT NULL,
+  candidatename character varying(50),
+  username character varying(50),
+  skills character varying(50),
+  CONSTRAINT candidates_pkey PRIMARY KEY (candidate_id),
+  CONSTRAINT candidates_username_fkey FOREIGN KEY (username)
+      REFERENCES public.login (username) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE TABLE public.jobs
+(
+  job_id integer NOT NULL DEFAULT nextval('jobs_job_id_seq'::regclass),
+  jobskills character varying(50),
+  joblocation character varying(50),
+  jobdescription character varying(50),
+  job_role character varying(50),
+  company_id integer,
+  CONSTRAINT jobs_pkey PRIMARY KEY (job_id),
+  CONSTRAINT jobs_company_id_fkey FOREIGN KEY (company_id)
+      REFERENCES public.companies (company_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE TABLE public.applications
+(
+  application_id integer NOT NULL DEFAULT nextval('applications_application_id_seq'::regclass),
+  job_id integer NOT NULL DEFAULT nextval('applications_job_id_seq'::regclass),
+  candidate_id integer NOT NULL DEFAULT nextval('applications_candidate_id_seq'::regclass),
+  creation_date date,
+  status character varying(50) NOT NULL,
+  CONSTRAINT applications_pkey PRIMARY KEY (application_id),
+  CONSTRAINT applications_candidate_id_fkey FOREIGN KEY (candidate_id)
+      REFERENCES public.candidates (candidate_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT applications_job_id_fkey FOREIGN KEY (job_id)
+      REFERENCES public.jobs (job_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
