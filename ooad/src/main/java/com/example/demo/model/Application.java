@@ -3,42 +3,52 @@ package com.example.demo.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @Entity
-@Table(name = "applications")
-@IdClass(Application.class)
-public class Application implements Serializable {
+@Table(name = "applications") 
+	   //uniqueConstraints= @UniqueConstraint(columnNames={"job_id", "candidate_id"}))
+public class Application  {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int application_id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int application_id;	
 	
-	@ManyToOne
-	private Job job;
+//	@Id
+//	@Column(name="job_id")
+//	private int job_id;
+
+	@OneToOne
+	@JoinColumn(name="job_id")
+	private Job jobObj;
 	
-	@ManyToOne
-	private Company comp;
+//	@Id
+//	@Column(name="candidate_id")
+//	private int candidate_id;
 	
-	@ManyToOne
-	private Candidate cand;
+	@OneToOne
+	@JoinColumn(name="candidate_id")
+	private Candidate candidateObj;
 	
-	@Id
-	private int job_id;
+//	@Id
+//	@Column(name="company_id")
+//	private int company_id;
 	
-	@Id
-	private int candidate_id;
 	
-	@Id
-	private int company_id;
 	
 	private Date creation_date;
 	private String status;
@@ -53,35 +63,26 @@ public class Application implements Serializable {
 		this.application_id = applicationId;
 	}
 	
-	public int getJobId()
+	public Job getJob()
 	{
-		return job_id;
+		return this.jobObj;
 	}
 	
-	public void setJobId(int jobId)
+	public void setJob(Job job)
 	{
-		this.job_id = jobId;
+		this.jobObj = job;
 	}
 	
-	public int getCandidateId()
+	public Candidate getCandidate()
 	{
-		return candidate_id;
+		return this.candidateObj;
 	}
 	
-	public void setCandidateId(int candidateId)
+	public void setCandidate(Candidate candidate)
 	{
-		this.candidate_id = candidateId;
+		this.candidateObj = candidate;
 	}
 	
-	public int getCompanyId()
-	{
-		return company_id;
-	}
-	
-	public void setCompanyId(int companyId)
-	{
-		this.company_id = companyId;
-	}
 	
 	public Date getCreationDate()
 	{
@@ -103,27 +104,4 @@ public class Application implements Serializable {
 		this.status = status;
 	}
 
-	public Job getJob() {
-		return job;
-	}
-
-	public void setJob(Job job) {
-		this.job = job;
-	}
-
-	public Company getComp() {
-		return comp;
-	}
-
-	public void setComp(Company comp) {
-		this.comp = comp;
-	}
-
-	public Candidate getCand() {
-		return cand;
-	}
-
-	public void setCand(Candidate cand) {
-		this.cand = cand;
-	}
 }
