@@ -24,6 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 	   //uniqueConstraints= @UniqueConstraint(columnNames={"job_id", "candidate_id"}))
 public class Application  {
 	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int application_id;	
@@ -105,3 +106,4 @@ public class Application  {
 	}
 
 }
+

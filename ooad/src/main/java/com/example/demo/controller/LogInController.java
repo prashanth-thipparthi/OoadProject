@@ -16,6 +16,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ import com.example.demo.dao.*;
 import com.example.demo.model.*;
 
 @RestController
+//@ComponentScan(basePackages = {"com.example.demo.model"}, basePackageClasses = Candidate.class)
 public class LogInController {
 	
 	@Autowired
@@ -94,7 +96,7 @@ public class LogInController {
 		
 		for(Candidate can: candidates)
 		{
-			System.out.println("CAN SKILLS " + can.getCandidatename());
+			System.out.println("CAN SKILLS " + can.getCandidateName());
 			if (can.getSkills() == null)
 				continue;
 			
@@ -134,18 +136,7 @@ public class LogInController {
 			rolesQuery += " j.job_role='" + requestedRoles.get(i).toUpperCase() + "' OR ";
 		}
 		rolesQuery += " j.job_role='" + requestedRoles.get(i) +"')";
-		
-//		String skillsQuery = " (string_to_array(j.jobskills, ',') && array[";
-//		
-//		//List<Job> jobs = (List<Job>)jdao.findAll();
-//		
-//		int j;
-//		for(j=0; j<requestedSkills.size()-1; j++)
-//		{
-//			skillsQuery += "'" + requestedSkills.get(j) + "',";
-//		}
-//		skillsQuery += "'" + requestedSkills.get(j) + "'])";
-		
+				
 		mainQuery += rolesQuery;
 		
 		List<Job> queriedJobs = (List<Job>) em.createQuery(mainQuery).getResultList();
@@ -157,12 +148,6 @@ public class LogInController {
 		for(Job job:queriedJobs) {
 			List<String> jobSkills = Arrays.asList(job.getJobSkills().toLowerCase().split(","));
 			boolean flag = false;
-//			System.out.println("------------------------------------------------------");
-//			for (String js: jobSkills)
-//				System.out.println("JS : " + js);
-//			for (String rs: requestedSkills)
-//				System.out.println("RS : " + rs);
-//			System.out.println("------------------------------------------------------");
 
 			for(String rs:requestedSkills)
 			{
@@ -220,11 +205,8 @@ public class LogInController {
 	{
 		
 		int samId = Integer.parseInt(sampleId);
-		
 		int comId = Integer.parseInt(companyId);
-		
-		System.out.println(samId + "-----" + "-----------" + comId + "-------------");
-		
+				
 		Sample sam = new Sample();
 		
 		//sam.setSampleId(samId);
@@ -250,40 +232,16 @@ public class LogInController {
 			{
 				if (requestedUser.isFlag() == true)
 				{
-					//candidate
-					//String canReqString = "FROM candidates c WHERE c.username = :userObject";
-					//ret = em.createQuery("FROM candidates c WHERE c.username = :userObject").setParameter("userObject", requestedUser).getSingleResult();
-					List<Candidate> cands = candao.findAll();
-					for (Candidate cand : cands)
-					{
-						if (cand.getUser() == requestedUser) {
-							ret = cand;
-							break;
-						}
-					}
+					return candao.findByUser(requestedUser);
+
 				}
 				else
 				{
-					//company
-					//String comReqString = "FROM companies com WHERE com.username = :userObject";
-					//ret = em.createQuery(comReqString).setParameter("userObject", requestedUser).getSingleResult();
-					List<Company> comps = cdao.findAll();
-					for (Company comp : comps)
-					{
-						if (comp.getUser() == requestedUser) {
-							ret = comp;
-							break;
-						}
-					}
+					return cdao.findByUser(requestedUser);
 					
 				}
 			}
 		}
-		else
-		{
-			return ret;
-		}
-		
 		
 		return ret;
 	}
@@ -292,9 +250,8 @@ public class LogInController {
 	public Login addUser(@RequestParam("username") String username,
 						 @RequestParam("password") String password, 
 						 @RequestParam("flag") String flag,
-						 @RequestParam("name") String name,
-						 @RequestParam("skills") String skills,
-						 @RequestParam("descr") String descr) {
+						 @RequestParam("name") String name
+						 ) {
 		
 	
 		
@@ -320,9 +277,7 @@ public class LogInController {
 			{
 				System.out.println("Candidate section");
 				Candidate can = new Candidate();
-				can.setCandidatename(name);
-				can.setSkills(skills);
-				can.setDescription(descr);
+				can.setCandidateName(name);
 				can.setUser(user);
 				candao.save(can);
 				
@@ -332,7 +287,6 @@ public class LogInController {
 				System.out.println("Company section");
 				Company com = new Company();
 				com.setCompanyname(name);
-				com.setDescription(descr);
 				com.setUser(user);
 				cdao.save(com);
 			}
