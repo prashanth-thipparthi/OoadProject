@@ -1,0 +1,1 @@
+﻿alter table public.candidates add column description character varying(50);
