@@ -1,1 +1,2 @@
-﻿alter table public.candidates add column description character varying(50);
+﻿alter table public.candidates remove column description;
+alter table public.candidates add column description character varying(50);
