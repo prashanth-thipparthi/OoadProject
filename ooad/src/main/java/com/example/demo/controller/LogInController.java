@@ -271,11 +271,10 @@ public class LogInController {
 		return ret;
 	}
 	
+
 	@PostMapping(path="/signup")//,consumes="{application/json}")
 	public Login addUser(@RequestBody SignUpParameters signUp
-						 ) {
-		
-	
+						 ) {		
 		
 		String qlString = "FROM login l WHERE l.username=" + signUp.getUsername();
 		boolean notFound = true;
