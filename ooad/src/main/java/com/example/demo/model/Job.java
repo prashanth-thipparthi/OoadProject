@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -14,7 +15,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Job {
 	
 	@Id
-	private long job_id;
+	@Column(name = "job_id")
+	private long jobId;
 	private String jobskills;
 	private String joblocation;
 	private String jobdescription;
@@ -27,12 +29,12 @@ public class Job {
 	/*Getter and Setter for JobID*/ 
 	public long getJobId()
 	{
-		return job_id;
+		return jobId;
 	}
 	
 	public void setJobId(long jobId)
 	{
-		this.job_id = jobId;
+		this.jobId = jobId;
 	}
 	
 	/*Getter and Setter for Job Skills*/

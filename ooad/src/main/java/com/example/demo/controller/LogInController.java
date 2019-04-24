@@ -229,10 +229,13 @@ public class LogInController {
 	}
 	
 	@GetMapping(path="/getNotAppliedJobs")
-	public List<Application> getNotAppliedJobs(@RequestParam("id") int canId)
+	public List<Job> getNotAppliedJobs(@RequestParam("id") int canId)
 	{
-		List<Application> apps = adao.findByCandidateObjNotIn(candao.findById(canId).get());
-		return apps;
+		List<Application> apps = adao.findJobObjByCandidateObj(candao.findById(canId).get());
+		List<Long> appliedJobsID = new ArrayList<Long>();
+		apps.forEach((app) -> appliedJobsID.add(app.getJob().getJobId()));
+		List<Job> jobs = jdao.findByJobIdNotIn(appliedJobsID);
+		return jobs;
 	}
 	
 	@GetMapping(path="/getAppliedJobs")
