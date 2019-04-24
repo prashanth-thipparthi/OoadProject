@@ -8,5 +8,6 @@ import com.example.demo.model.Job;
 
 
 public interface JobDAO extends JpaRepository<Job, Long>{
-	List<Job> findByJobIdNotIn(List<Long> jobs);
+	List<Job> findByJobIdNotIn(List<Long> ids);
+	List<Job> findByJobId(List<Long> ids);
 }

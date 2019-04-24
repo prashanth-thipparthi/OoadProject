@@ -234,17 +234,27 @@ public class LogInController {
 		List<Application> apps = adao.findJobObjByCandidateObj(candao.findById(canId).get());
 		List<Long> appliedJobsID = new ArrayList<Long>();
 		apps.forEach((app) -> appliedJobsID.add(app.getJob().getJobId()));
+		
+		if (appliedJobsID.isEmpty()) {
+			// Return all jobs if no applications for the candidates are found.
+			return jdao.findAll();
+		}
+
+		// Get jobs that the candidate has not applied to
 		List<Job> jobs = jdao.findByJobIdNotIn(appliedJobsID);
+		
 		return jobs;
 	}
 	
 	@GetMapping(path="/getAppliedJobs")
-	public List<Application> getAppliedJobs(@RequestParam("id") int canId)
+	public List<Job> getAppliedJobs(@RequestParam("id") int canId)
 	{
-		//List<Application> jobs = adao.findJobObjByCandidateObj(candao.findById(canId).get());
-		//List<Application> jobs = adao.findByCandidateObjNotIn(candao.findById(canId).get());
 		List<Application> apps = adao.findJobObjByCandidateObj(candao.findById(canId).get());
-		return apps;
+		List<Long> appliedJobsID = new ArrayList<Long>();
+		apps.forEach((app) -> appliedJobsID.add(app.getJob().getJobId()));
+		
+		List<Job> jobs = jdao.findByJobId(appliedJobsID);
+		return jobs;
 	}
 	
 	@GetMapping(path="/signin")
