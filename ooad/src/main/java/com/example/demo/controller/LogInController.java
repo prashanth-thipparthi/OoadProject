@@ -247,14 +247,10 @@ public class LogInController {
 	}
 	
 	@GetMapping(path="/getAppliedJobs")
-	public List<Job> getAppliedJobs(@RequestParam("id") int canId)
+	public List<Application> getAppliedJobs(@RequestParam("id") int canId)
 	{
 		List<Application> apps = adao.findJobObjByCandidateObj(candao.findById(canId).get());
-		List<Long> appliedJobsID = new ArrayList<Long>();
-		apps.forEach((app) -> appliedJobsID.add(app.getJob().getJobId()));
-		
-		List<Job> jobs = jdao.findByJobId(appliedJobsID);
-		return jobs;
+		return apps;
 	}
 	
 	@GetMapping(path="/signin")
