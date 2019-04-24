@@ -246,7 +246,7 @@ public class LogInController {
 		return ret;
 	}
 	
-	@PostMapping(path="/signup")//,consumes="{application/json}")
+	@PostMapping(path="/signup")//consumes="application/json")
 	public Login addUser(@RequestParam("username") String username,
 						 @RequestParam("password") String password, 
 						 @RequestParam("flag") String flag,
