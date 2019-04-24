@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.SignUpParameters;
 import com.example.demo.dao.*;
 import com.example.demo.model.*;
 
@@ -247,37 +248,30 @@ public class LogInController {
 	}
 	
 	@PostMapping(path="/signup")//,consumes="{application/json}")
-	public Login addUser(@RequestParam("username") String username,
-						 @RequestParam("password") String password, 
-						 @RequestParam("flag") String flag,
-						 @RequestParam("name") String name
+	public Login addUser(@RequestBody SignUpParameters signUp
 						 ) {
 		
 	
 		
-		String qlString = "FROM login l WHERE l.username=" + username;
+		String qlString = "FROM login l WHERE l.username=" + signUp.getUsername();
 		boolean notFound = true;
 		Login user = null;
 			
-		if (dao.existsById(username) == false)
+		if (dao.existsById(signUp.getUsername()) == false)
 		{
 			user = new Login();
-			if (flag.equals("candidate"))
-			{
-				user.setFlag(true);
-			}
-			else {
-				user.setFlag(false);
-			}
-			user.setPassword(password);
-			user.setUsername(username);
+			user.setFlag(signUp.isFlag());
+			user.setPassword(signUp.getPassword());
+			user.setUsername(signUp.getUsername());
 			dao.save(user);
-			System.out.println("FLAG is " + flag);
-			if (flag.equals("candidate"))
+			
+			System.out.println("FLAG is " + user.isFlag());
+			
+			if (signUp.isFlag())
 			{
 				System.out.println("Candidate section");
 				Candidate can = new Candidate();
-				can.setCandidateName(name);
+				can.setCandidateName(signUp.getName());
 				can.setUser(user);
 				candao.save(can);
 				
@@ -286,7 +280,7 @@ public class LogInController {
 			{
 				System.out.println("Company section");
 				Company com = new Company();
-				com.setCompanyname(name);
+				com.setCompanyname(signUp.getName());
 				com.setUser(user);
 				cdao.save(com);
 			}
