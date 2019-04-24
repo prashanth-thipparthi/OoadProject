@@ -33,15 +33,15 @@ public class Application  {
 //	@Column(name="job_id")
 //	private int job_id;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name="job_id")
-	private Job jobObj;
+	private Job jObj;
 	
 //	@Id
 //	@Column(name="candidate_id")
 //	private int candidate_id;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name="candidate_id")
 	private Candidate candidateObj;
 	
@@ -66,12 +66,12 @@ public class Application  {
 	
 	public Job getJob()
 	{
-		return this.jobObj;
+		return this.jObj;
 	}
 	
 	public void setJob(Job job)
 	{
-		this.jobObj = job;
+		this.jObj = job;
 	}
 	
 	public Candidate getCandidate()

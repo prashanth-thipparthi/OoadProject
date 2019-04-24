@@ -220,6 +220,30 @@ public class LogInController {
 		return sam;
 	}
 
+	@GetMapping(path="/getRoles")
+	public List<String> getRoles()
+	{
+		String query = "SELECT DISTINCT j.job_role FROM jobs j";
+		List<String> roles = em.createQuery(query).getResultList();
+		return roles;
+	}
+	
+	@GetMapping(path="/getNotAppliedJobs")
+	public List<Application> getNotAppliedJobs(@RequestParam("id") int canId)
+	{
+		List<Application> apps = adao.findByCandidateObjNotIn(candao.findById(canId).get());
+		return apps;
+	}
+	
+	@GetMapping(path="/getAppliedJobs")
+	public List<Application> getAppliedJobs(@RequestParam("id") int canId)
+	{
+		//List<Application> jobs = adao.findJobObjByCandidateObj(candao.findById(canId).get());
+		//List<Application> jobs = adao.findByCandidateObjNotIn(candao.findById(canId).get());
+		List<Application> apps = adao.findJobObjByCandidateObj(candao.findById(canId).get());
+		return apps;
+	}
+	
 	@GetMapping(path="/signin")
 	public Object getUser(@RequestParam("username") String username, 
 									  @RequestParam("password") String password) {

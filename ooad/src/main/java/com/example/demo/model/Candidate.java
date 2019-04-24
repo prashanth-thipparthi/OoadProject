@@ -1,11 +1,14 @@
 package com.example.demo.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -13,6 +16,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+
 
 @XmlRootElement
 @Entity(name = "candidates")
@@ -39,6 +44,10 @@ public class Candidate {
 	@OneToOne
 	@JoinColumn(name="username")
 	private Login user;
+	
+	@OneToMany
+	@JoinColumn(name="job_id_list")
+	private List<Job> jobList;
 	
 	public Candidate() {
 		

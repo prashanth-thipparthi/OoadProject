@@ -16,4 +16,5 @@ public interface CandidateDAO extends JpaRepository<Candidate, Integer> {
 //	List<Candidate> findCandidates(@Param("userObject") Login userObj);
 	//Candidate findByUserName(String userName);
 	List<Candidate> findByUser(Login user);
+	
 }
