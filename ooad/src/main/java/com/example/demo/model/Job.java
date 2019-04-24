@@ -48,6 +48,14 @@ public class Job {
 		this.jobskills = jobSkills;
 	}
 	
+	public Company getCompanyObj() {
+		return companyObj;
+	}
+
+	public void setCompanyObj(Company companyObj) {
+		this.companyObj = companyObj;
+	}
+
 	/*Getter and Setter for Job Location*/
 	public String getJobLocation()
 	{
