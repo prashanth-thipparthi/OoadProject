@@ -1,0 +1,1 @@
+alter table public.candidates add column job_id_list integer, add constraint candidates_job_id_fkey foreign key(job_id_list) references public.jobs(job_id) match simple on update cascade on delete cascade;
