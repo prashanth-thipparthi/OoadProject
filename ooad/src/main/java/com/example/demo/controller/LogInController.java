@@ -207,9 +207,7 @@ public class LogInController {
 		app.setJob(j);
 		app.setCreationDate(date1);
 		app.setStatus(addApplicationParams.getStatus());
-		j.addApplication(app);
 		adao.save(app);
-		jdao.save(j);
 		return true;
 	}
 

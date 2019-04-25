@@ -51,27 +51,14 @@ public class Job implements Serializable {
 	@Column(name="job_role")
 	@JsonProperty("role")
 	private String job_role;
-	
-	@OneToMany(fetch=FetchType.EAGER, mappedBy="jObj")
-	private List<Application> appIdList;
+
 	
 	@ManyToOne
 	@JoinColumn(name="company_id")
 	private Company companyObj;
 	
 	public Job() {
-		this.appIdList  = new ArrayList<Application>();
-	}
-	
-	@JsonIgnore
-	public List<Application> getApplicationList()
-	{
-		return this.appIdList;
-	}
 
-	public void addApplication(Application app) 
-	{
-		this.appIdList.add(app);
 	}
 	
 	/*Getter and Setter for JobID*/ 
