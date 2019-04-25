@@ -76,7 +76,7 @@ public class Application implements Serializable {
 		this.application_id = applicationId;
 	}
 	
-	@JsonIgnore
+	
 	public Job getJob()
 	{
 		return this.jObj;
