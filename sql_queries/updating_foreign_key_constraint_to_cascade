@@ -1,0 +1,8 @@
+alter table public.applications drop constraint applications_candidate_id_fkey;
+alter table public.applications drop constraint applications_job_id_fkey;
+
+alter table public.applications add constraint applications_candidate_id_fkey FOREIGN KEY (candidate_id)
+      REFERENCES public.candidates (candidate_id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE, add constraint applications_job_id_fkey FOREIGN KEY (job_id)
+      REFERENCES public.jobs (job_id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE;
