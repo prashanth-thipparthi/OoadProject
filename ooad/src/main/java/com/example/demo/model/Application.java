@@ -18,11 +18,13 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @XmlRootElement
 @Entity
 @Table(name = "applications") 
 	   //uniqueConstraints= @UniqueConstraint(columnNames={"job_id", "candidate_id"}))
-public class Application  {
+public class Application implements Serializable {
 	
 	
 	@Id
@@ -33,8 +35,10 @@ public class Application  {
 //	@Column(name="job_id")
 //	private int job_id;
 
+	
 	@ManyToOne
 	@JoinColumn(name="job_id")
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private Job jObj;
 	
 //	@Id
@@ -43,6 +47,7 @@ public class Application  {
 	
 	@ManyToOne
 	@JoinColumn(name="candidate_id")
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private Candidate candidateObj;
 	
 //	@Id

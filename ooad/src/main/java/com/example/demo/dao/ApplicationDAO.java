@@ -15,4 +15,5 @@ public interface ApplicationDAO extends JpaRepository<Application, Integer> {
 	List<Application> findByCandidateObjNotIn(Candidate cand);
 	
 	List<Application> findUniqueJobObjByCandidateObjNotIn(Candidate cand);
+	
 }

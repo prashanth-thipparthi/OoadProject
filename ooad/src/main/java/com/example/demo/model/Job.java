@@ -9,9 +9,12 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @XmlRootElement
 @Entity(name = "jobs")
 @Table(name = "jobs")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Job {
 	
 	@Id
