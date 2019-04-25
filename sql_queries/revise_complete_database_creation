@@ -58,7 +58,6 @@ CREATE TABLE public.jobs
   jobdescription character varying(500),
   job_role character varying(50),
   company_id integer,
-  application_id_list integer,
   CONSTRAINT jobs_pkey PRIMARY KEY (job_id),
   CONSTRAINT jobs_company_id_fkey FOREIGN KEY (company_id)
       REFERENCES public.companies (company_id) MATCH SIMPLE
@@ -91,8 +90,3 @@ WITH (
   OIDS=FALSE
 );
 
-
-ALTER TABLE public.jobs ADD CONSTRAINT jobs_application_id_list_fkey FOREIGN KEY (application_id_list) 
-      REFERENCES public.applications (application_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-     
