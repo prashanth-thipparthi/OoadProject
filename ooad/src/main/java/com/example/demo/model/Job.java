@@ -1,11 +1,16 @@
 package com.example.demo.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -19,15 +24,26 @@ public class Job {
 	
 	@Id
 	@Column(name = "job_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long jobId;
 	private String jobskills;
 	private String joblocation;
 	private String jobdescription;
 	private String job_role;
 	
+	@OneToMany
+	@JoinColumn(name="application_id_list")
+	private List<Application> appIdList;
+	
 	@ManyToOne
 	@JoinColumn(name="company_id")
 	private Company companyObj;
+	
+	public List<Application> getApplicationList()
+	{
+		return this.appIdList;
+	}
+
 	
 	/*Getter and Setter for JobID*/ 
 	public long getJobId()

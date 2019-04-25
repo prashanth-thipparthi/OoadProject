@@ -192,17 +192,32 @@ public class LogInController {
 		Application app = new Application();
 		
 		Candidate candi = candao.getOne(canId);
-		Job j = jdao.findById(jId).get();
+		Job j = null;
+		if (jdao.existsById(jId) == true)
+		{
+			j = jdao.findById(jId).get();
+			
+		}
+		else
+		{
+			return false;
+		}
 		app.setCandidate(candi); 
 		app.setJob(j);
 		app.setCreationDate(date1);
 		app.setStatus(addApplicationParams.getStatus());
-		
+		j.getApplicationList().add(app);
 		adao.save(app);
-		
+		jdao.save(j);
 		return true;
 	}
 
+	@GetMapping(path="/getJobsForCompany")
+	public List<Job> getJobsForCompany(@RequestParam("id") int id)
+	{
+		return null;
+	}
+	
 	@GetMapping(path="/getRoles")
 	public List<String> getRoles()
 	{
@@ -298,6 +313,7 @@ public class LogInController {
 		
 		return false;
 	}
+	
 	
 	@PostMapping(path="/signup")//,consumes="{application/json}")
 	public Login addUser(@RequestBody SignUpParameters signUp
