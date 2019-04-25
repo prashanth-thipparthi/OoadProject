@@ -1,0 +1,2 @@
+alter table public.jobs drop column jobdescription;
+alter table public.jobs add column jobdescription character varying(500);
