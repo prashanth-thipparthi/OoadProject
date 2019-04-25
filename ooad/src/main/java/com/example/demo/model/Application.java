@@ -18,7 +18,10 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @XmlRootElement
 @Entity
@@ -29,6 +32,8 @@ public class Application implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="application_id")
+	@JsonProperty("appId")
 	private int application_id;	
 	
 //	@Id
@@ -38,7 +43,6 @@ public class Application implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name="job_id")
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private Job jObj;
 	
 //	@Id
@@ -55,9 +59,12 @@ public class Application implements Serializable {
 //	private int company_id;
 	
 	
-	
+	@JsonProperty("creationDate")
 	private Date creation_date;
+	@JsonProperty("status")
 	private String status;
+	
+	public Application() {}
 	
 	public int getApplicationId()
 	{
@@ -69,6 +76,7 @@ public class Application implements Serializable {
 		this.application_id = applicationId;
 	}
 	
+	@JsonIgnore
 	public Job getJob()
 	{
 		return this.jObj;

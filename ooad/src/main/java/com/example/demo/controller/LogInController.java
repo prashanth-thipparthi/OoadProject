@@ -177,6 +177,7 @@ public class LogInController {
 		return true;
 	}
 	
+	
 	@PostMapping(path="/application")
 	public boolean addApplication(@RequestBody AddApplicationParameters addApplicationParams) throws ParseException
 	{
@@ -192,17 +193,33 @@ public class LogInController {
 		Application app = new Application();
 		
 		Candidate candi = candao.getOne(canId);
-		Job j = jdao.findById(jId).get();
+		Job j = null;
+		if (jdao.existsById(jId) == true)
+		{
+			j = jdao.findById(jId).get();
+			
+		}
+		else
+		{
+			return false;
+		}
 		app.setCandidate(candi); 
 		app.setJob(j);
 		app.setCreationDate(date1);
 		app.setStatus(addApplicationParams.getStatus());
-		
+		j.addApplication(app);
 		adao.save(app);
-		
+		jdao.save(j);
 		return true;
 	}
 
+	@GetMapping(path="/getJobsForCompany")
+	public List<Job> getJobsForCompany(@RequestParam("id") int id)
+	{
+		List<Job> jobs = jdao.findByCompanyObj(cdao.getOne(id));
+		return jobs;
+	}
+	
 	@GetMapping(path="/getRoles")
 	public List<String> getRoles()
 	{
@@ -298,6 +315,7 @@ public class LogInController {
 		
 		return false;
 	}
+	
 	
 	@PostMapping(path="/signup")//,consumes="{application/json}")
 	public Login addUser(@RequestBody SignUpParameters signUp

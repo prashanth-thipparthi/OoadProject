@@ -1,0 +1,1 @@
+alter table public.jobs add column application_id_list integer, add constraint jobs_application_id_list_fk foreign key (application_id_list) references public.applications(application_id) match simple on update cascade on delete cascade;

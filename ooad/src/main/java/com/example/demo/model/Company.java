@@ -35,6 +35,8 @@ public class Company {
 	@JoinColumn(name="username")
 	private Login user;
 	
+	public Company() {}
+	
 	public String getCompanyname() {
 		return companyname;
 	}
