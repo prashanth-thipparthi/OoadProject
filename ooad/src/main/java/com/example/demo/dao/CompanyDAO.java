@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface CompanyDAO extends  JpaRepository<Company, Integer>  {
 	
-	List<Company> findByUser(Login user);
+	Company findByUser(Login user);
 
 }
