@@ -55,13 +55,13 @@ CREATE TABLE public.jobs
   job_id integer NOT NULL DEFAULT nextval('jobs_job_id_seq'::regclass),
   jobskills character varying(50),
   joblocation character varying(50),
-  jobdescription character varying(50),
+  jobdescription character varying(500),
   job_role character varying(50),
   company_id integer,
   CONSTRAINT jobs_pkey PRIMARY KEY (job_id),
   CONSTRAINT jobs_company_id_fkey FOREIGN KEY (company_id)
       REFERENCES public.companies (company_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+      ON UPDATE CASCADE ON DELETE CASCADE
 )
 WITH (
   OIDS=FALSE
@@ -81,10 +81,10 @@ CREATE TABLE public.applications
   CONSTRAINT applications_pkey PRIMARY KEY (application_id),
   CONSTRAINT applications_candidate_id_fkey FOREIGN KEY (candidate_id)
       REFERENCES public.candidates (candidate_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
+      ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT applications_job_id_fkey FOREIGN KEY (job_id)
       REFERENCES public.jobs (job_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+      ON UPDATE CASCADE ON DELETE CASCADE
 )
 WITH (
   OIDS=FALSE
