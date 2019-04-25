@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.AddApplicationParameters;
+import com.example.demo.AddJobParameters;
 import com.example.demo.SignUpParameters;
 import com.example.demo.dao.*;
 import com.example.demo.model.*;
@@ -61,33 +65,10 @@ public class LogInController {
 	public List<Login> getUsers() {
 		
 		List<Login> users = (List<Login>)dao.findAll(); 
-		
-		/*
-		User u1 = new User();
-		u1.setId(100);
-		u1.setUsername("abc");
-		u1.setPassword("123");
-		
-
-		User u2 = new User();
-		u2.setId(101);
-		u2.setUsername("xyz");
-		u2.setPassword("999");
-		
-		users.add(u1);
-		users.add(u2); */
-		
 		return users;
 	}
 	
-//	//@RequestMapping(path="users/{userid}",produces={"application/xml"})
-//	@GetMapping("/users/{userid}")
-//	public Optional<Login> getUsers(@PathVariable("userid") int userid) {
-//			return dao.findById(userid);	
-//	}
-//	
-	
-	@GetMapping("candidates")
+	@GetMapping("/candidates")
 	public List<Candidate> getCandidates(@RequestParam("skills") String skills)
 	{
 		List<String> requestedSkills = Arrays.asList(skills.split(","));
@@ -119,12 +100,10 @@ public class LogInController {
 				filterBySkills.add(can);
 					
 		}
-		
 		return filterBySkills;
 	}
 	
-	
-	@GetMapping("jobs")
+	@GetMapping("/jobs")
 	public List<Job> getJobs(@RequestParam("skills") String skills, 
 							 @RequestParam("role") String role) {
 		
@@ -158,66 +137,70 @@ public class LogInController {
 					break;
 				}
 			}
+			
 			if (flag == true) {
 				filterBySkills.add(job);
-			}
-				
+			}		
 		}
-		
-
 		return filterBySkills;
 	}
 	
+	
+	
+	@GetMapping(path="/deleteApplication")
+	public boolean deleteApplication(@RequestParam("id") int id) 
+	{
+		if (adao.existsById(id) == true) {
+			adao.deleteById(id);
+			return true;
+		}
+		
+		return false;
+	}
+	
+	@GetMapping(path="/applicationStatus")
+	public boolean changeApplicationStatus(@RequestParam("status") String status,
+											@RequestParam("id") int id)
+	{
+		try {
+			Application app = adao.findById(id).get();
+			app.setStatus(status);
+			adao.save(app);
+		}
+		catch(Exception e) 
+		{
+			System.out.println("Exception");
+			System.out.println(e);
+			return false;
+		}
+		
+		return true;
+	}
+	
 	@PostMapping(path="/application")
-	public Application addApplication(@RequestParam("application_id") String applicationId,
-							   @RequestParam("job_id") String jobId,
-							   @RequestParam("candidate_id") String candidateId,
-							   @RequestParam("creation_date") String creationDate,
-							   @RequestParam("status") String status) throws ParseException
+	public boolean addApplication(@RequestBody AddApplicationParameters addApplicationParams) throws ParseException
 	{
 		
-		int appId = Integer.parseInt(applicationId);
-		long jId = Integer.parseInt(jobId); //done
-		int canId = Integer.parseInt(candidateId); //done
-		Date date = new SimpleDateFormat("dd/MM/yyyy").parse(creationDate);
+		long jId = Integer.parseInt(addApplicationParams.getJob_id());
+		int canId = Integer.parseInt(addApplicationParams.getCandidate_id());
 		
-		System.out.println(appId + "-----" + jId + "--------" + canId + "------------------------" + date + "------");
-		
+		Date date = Calendar.getInstance().getTime();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+		String strDate = dateFormat.format(date);
+		Date date1 = dateFormat.parse(strDate);
+				
 		Application app = new Application();
 		
-		//app.setApplicationId(appId);
 		Candidate candi = candao.getOne(canId);
-		Job j = jdao.getOne(jId);
-		
-		app.setCandidate(candi);
+		Job j = jdao.findById(jId).get();
+		app.setCandidate(candi); 
 		app.setJob(j);
-		
-		app.setCreationDate(date);
-		app.setStatus(status);
+		app.setCreationDate(date1);
+		app.setStatus(addApplicationParams.getStatus());
 		
 		adao.save(app);
 		
-		return app;
-	}
-
-	@PostMapping(path="/sample")
-	public Sample addSample(@RequestParam("sample_id") String sampleId,
-							   @RequestParam("company_id") String companyId) throws ParseException
-	{
-		
-		int samId = Integer.parseInt(sampleId);
-		int comId = Integer.parseInt(companyId);
-				
-		Sample sam = new Sample();
-		
-		//sam.setSampleId(samId);
-		Company comp = cdao.getOne(comId);
-		sam.setCompanyObj(comp);
-	
-		
-		samdao.save(sam);
-		
-		return sam;
+		return true;
 	}
 
 	@GetMapping(path="/getRoles")
@@ -280,11 +263,46 @@ public class LogInController {
 		return ret;
 	}
 	
+	@PostMapping(path="/addJob")
+	public boolean addJob(@RequestBody AddJobParameters addJobParams)
+	{
+		try {
+			
+			Job newJob = new Job();
+			Company compObj = cdao.getOne(addJobParams.getCompany_id());
+			newJob.setCompanyObj(compObj);
+			newJob.setJobDescription(addJobParams.getDescription());
+			newJob.setJobLocation(addJobParams.getLocation());
+			newJob.setJobRole(addJobParams.getRole());
+			newJob.setJobSkills(addJobParams.getSkills());
+		
+			jdao.save(newJob);
+		}
+		catch (Exception e)
+		{
+			System.out.println("Exception occurred");
+			return false;
+		}
+		
+		return true;
+	}
 
+	@GetMapping(path="/deleteJob")
+	public boolean deleteJob(@RequestParam("id") long id)
+	{
+		if (jdao.existsById(id) == true)
+		{
+			jdao.deleteById(id);
+			return true;
+		}
+		
+		return false;
+	}
+	
 	@PostMapping(path="/signup")//,consumes="{application/json}")
 	public Login addUser(@RequestBody SignUpParameters signUp
-						 ) {		
-		
+						 ) 
+	{				
 		String qlString = "FROM login l WHERE l.username=" + signUp.getUsername();
 		boolean notFound = true;
 		Login user = null;
@@ -325,18 +343,9 @@ public class LogInController {
 		
 	}
 	
-//	@PutMapping(path="/users")//,consumes="{application/json}")
-//	public Login saveOrAddUser(@RequestBody Login user) {
-//		dao.save(user);
-//		return user;
-//	}
-	
 	@DeleteMapping("/deleteUser")
-	public String deleteUser(@RequestParam("username") String username) {
-		//return dao.findById(userid);
-//		Login user = dao.getOne(userid);
-//		dao.delete(user);	
-		
+	public String deleteUser(@RequestParam("username") String username) 
+	{
 		String deleteMessage = "Cannot delete as the user " + username + " doesn't exist"; 
 		if (dao.existsById(username) == true) {
 			System.out.println("The user " + username + " exists. Going to delete ....");
