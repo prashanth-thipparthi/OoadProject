@@ -34,9 +34,41 @@ public class JobController {
 	@Autowired
 	CompanyDAO cdao;
 	
+	@Autowired
+	SkillsDAO skilldao;
+	
 	@PersistenceContext
 	public EntityManager em;
-
+	
+	
+	
+	@PostMapping(path="/skills")
+	public boolean addSkills(@RequestParam String skills )
+	{
+		try {
+		
+			String lowercaseSkills = skills.toLowerCase();
+			String skill[] = lowercaseSkills.split(",");
+			for(String sk : skill) {
+				Skills s = new Skills(sk);
+				skilldao.save(s);
+			}
+		}
+		catch (Exception e)
+		{
+			System.out.println("Exception occurred");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	@GetMapping("/skills")
+	public List<Skills> getSkills() {
+		
+		return skilldao.findAll();
+	}
+	
 	@GetMapping("/jobs")
 	public List<Job> getJobs(@RequestParam("skills") String skills, 
 							 @RequestParam("role") String role) {
