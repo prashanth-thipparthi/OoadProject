@@ -23,6 +23,7 @@ Backend: Spring Boot, Hibernate
 1. Download the sts bundle. https://spring.io/tools.
 2. Clone the git repo.
 3. Open the project as a Sprint Boot Application.
-4. Run the project as a Spring Boot Application.
+4. Verify the application.properties file.
+5. Run the project as a Spring Boot Application.
 
 
