@@ -49,6 +49,11 @@ public class JobController {
 	@PersistenceContext
 	public EntityManager em;
 
+	
+	/*
+	 * A Post request to add the skills in the Skills table. Expected parameter is a string consisting of comma separated values representing the skills.
+	 * Returns true if the skills are successfully added to the skills table otherwise it returns false.
+	 */
 	@PostMapping(path="/skills")
 	public boolean addSkills(@RequestParam String skills )
 	{
@@ -69,6 +74,12 @@ public class JobController {
 		
 		return true;
 	}
+	
+	/*
+	 * A Get request to get the list of all the unique skills from the skills table.
+	 * No parameters expected.
+	 * Returns a list of all the unique skills from the skills table
+	 */
 	
 	@GetMapping("/skills")
 	public List<Skills> getSkills() {
@@ -186,6 +197,8 @@ public class JobController {
 	@PostMapping(path="/addJob")
 	public boolean addJob(@RequestBody AddJobParameters addJobParams)
 	{
+		JobController jc = new JobController();
+		
 		try {
 			
 			Job newJob = new Job();
@@ -195,6 +208,14 @@ public class JobController {
 			newJob.setJobLocation(addJobParams.getLocation());
 			newJob.setJobRole(addJobParams.getRole());
 			newJob.setJobSkills(addJobParams.getSkills());
+			if (jc.addSkills(addJobParams.getSkills()) == true)
+			{
+				System.out.println("The skills have been added to the skills table successfully.");
+			}
+			else
+			{ 
+				System.out.println("ERRRORRR: The skills have not been added to the skills table");
+			}
 		
 			jdao.save(newJob);
 		}
