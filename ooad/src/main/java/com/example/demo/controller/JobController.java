@@ -43,15 +43,44 @@ public class JobController {
 	@Autowired
 	CompanyDAO cdao;
 	
+	@Autowired
+	SkillsDAO skilldao;
+	
 	@PersistenceContext
 	public EntityManager em;
 
-	/*
-	 * A Get Request to get the list of all the jobs which requires at least one of the requested skills and has openings for at least one of the requested roles.
-	 * Expects 2 parameters: one being a string representing a comma separated value of skills and one being role representing a comma separated value of roles.
-	 * Returns a List of all the jobs requiring at least one of the requested skills and at least one of the requested roles.
-	 */
+	@PostMapping(path="/skills")
+	public boolean addSkills(@RequestParam String skills )
+	{
+		try {
+		
+			String lowercaseSkills = skills.toLowerCase();
+			String skill[] = lowercaseSkills.split(",");
+			for(String sk : skill) {
+				Skills s = new Skills(sk);
+				skilldao.save(s);
+			}
+		}
+		catch (Exception e)
+		{
+			System.out.println("Exception occurred");
+			return false;
+		}
+		
+		return true;
+	}
 	
+	@GetMapping("/skills")
+	public List<Skills> getSkills() {
+		
+		return skilldao.findAll();
+	}
+	
+/*
+ * A Get Request to get the list of all the jobs which requires at least one of the requested skills and has openings for at least one of the requested roles.
+ * Expects 2 parameters: one being a string representing a comma separated value of skills and one being role representing a comma separated value of roles.
+ * Returns a List of all the jobs requiring at least one of the requested skills and at least one of the requested roles.
+ */
 	@GetMapping("/jobs")
 	public List<Job> getJobs(@RequestParam("skills") String skills, 
 							 @RequestParam("role") String role) {

@@ -99,22 +99,3 @@ CONSTRAINT skills_pkey PRIMARY KEY (skill)
 )WITH (
   OIDS=FALSE
 );
-
-
-create sequence job_skill_id;
-
-CREATE TABLE public.job_skills
-(
-  id integer NOT NULL DEFAULT nextval('job_skill_id'::regclass),
-  job_id integer NOT NULL,
-  skill character varying(50) NOT NULL,
-  CONSTRAINT job_skills_pkey PRIMARY KEY (id),
-  CONSTRAINT job_skills_jobid_fkey FOREIGN KEY (job_id)
-      REFERENCES public.jobs(job_id) MATCH SIMPLE
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT job_skills_skill_fkey FOREIGN KEY (skill)
-      REFERENCES public.skills(skill) MATCH SIMPLE
-      ON UPDATE CASCADE ON DELETE CASCADE
-)WITH (
-  OIDS=FALSE
-);
