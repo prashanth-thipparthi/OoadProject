@@ -1,3 +1,6 @@
+/**
+ * @author Amith Gopal
+ */
 package com.example.demo.dao;
 
 import java.util.List;
@@ -10,11 +13,15 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.model.Candidate;
 import com.example.demo.model.Login;
 
+/*
+ * This class contains functions which performs CRUD operations on the Candidate table in the database
+ */
+
 public interface CandidateDAO extends JpaRepository<Candidate, Integer> {
 
-//	@Query("FROM candidates c WHERE c.username = :userObject")
-//	List<Candidate> findCandidates(@Param("userObject") Login userObj);
-	//Candidate findByUserName(String userName);
 
+	/*
+	 * Finds the Candidate with a requested Login object user
+	 */
 	Candidate findByUser(Login user);
 }

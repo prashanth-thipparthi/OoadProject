@@ -1,4 +1,11 @@
+/**
+ * @author ${user}
+ */
 package com.example.demo;
+
+/*
+ * This class represents the parameters of the request body while adding an application
+ */
 
 public class AddApplicationParameters {
 
@@ -6,6 +13,8 @@ public class AddApplicationParameters {
 	private String candidate_id;
 	private String status;
 		
+	/*Getters and Setters of the private variables*/
+	
 	public String getJob_id() {
 		return job_id;
 	}

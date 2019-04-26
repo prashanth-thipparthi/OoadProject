@@ -1,3 +1,6 @@
+/**
+ * @author ${user}
+ */
 package com.example.demo.model;
 
 import javax.persistence.Entity;
@@ -7,26 +10,20 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+/*
+ * This class is the Object Relational Mapper (ORM) for the Login table in the database
+ */
+
 @XmlRootElement
 @Entity(name = "login")
 @Table(name = "login")
 public class Login {
-	
-//	@Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
-//	private int id;
 	
 	@Id
 	private String username;
 	private String password;
 	private boolean flag;
 	
-//	public int getId() {
-//		return id;
-//	}
-//	public void setId(int id) {
-//		this.id = id;
-//	}
 	public String getUsername() {
 		return username;
 	}

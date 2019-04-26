@@ -1,3 +1,6 @@
+/**
+ * @author Amith Gopal
+ */
 package com.example.demo.controller;
 
 import java.text.DateFormat;
@@ -13,6 +16,7 @@ import javax.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,8 +25,12 @@ import com.example.demo.AddApplicationParameters;
 import com.example.demo.dao.*;
 import com.example.demo.model.*;
 
+/*
+ * This Application Controller contains handling REST APIs focused on
+ * dealing with queries on the Application table in the database.
+ */
+
 @RestController
-//@ComponentScan(basePackages = {"com.example.demo.model"}, basePackageClasses = Candidate.class)
 public class ApplicationController {
 	
 	@Autowired
@@ -41,6 +49,11 @@ public class ApplicationController {
 	@PersistenceContext
 	public EntityManager em;
 	
+	/*
+	 * Get Request to delete an application. Expects a request parameter of "id"
+	 * Return type is true if delete is successful otherwise false
+	 */
+	
 	@GetMapping(path="/deleteApplication")
 	public boolean deleteApplication(@RequestParam("id") int id) 
 	{
@@ -52,7 +65,13 @@ public class ApplicationController {
 		return false;
 	}
 	
-	@GetMapping(path="/applicationStatus")
+	
+	/*
+	 * Put Request to change the status of an application. Expects 2 request parameters, one status and the other application id.
+	 * Returns true if the status change is successful else returns false.
+	 */
+	
+	@PutMapping(path="/applicationStatus")
 	public boolean changeApplicationStatus(@RequestParam("status") String status,
 											@RequestParam("id") int id)
 	{
@@ -72,6 +91,10 @@ public class ApplicationController {
 	}
 	
 	
+	/*
+	 * Post Request to add an application in the application database. Expects parameters like job_id, candidate_id, status.
+	 * Returns true if the application is saved successfully in the database otherwise returns false.
+	 */
 	@PostMapping(path="/application")
 	public boolean addApplication(@RequestBody AddApplicationParameters addApplicationParams) throws ParseException
 	{
@@ -104,6 +127,12 @@ public class ApplicationController {
 		adao.save(app);
 		return true;
 	}
+	
+	
+	/*
+	 * Get all the applications of a candidate with id "id". Expects a parameter "id".
+	 * Returns list of the applications of the candidate.
+	 */
 	
 	@GetMapping(path="/getAppliedJobs")
 	public List<Application> getAppliedJobs(@RequestParam("id") int canId)
