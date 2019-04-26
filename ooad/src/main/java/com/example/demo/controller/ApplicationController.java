@@ -1,5 +1,5 @@
 /**
- * @author Amith Gopal
+ * @author Amith Gopal/Prashanth Thipparthi
  */
 package com.example.demo.controller;
 

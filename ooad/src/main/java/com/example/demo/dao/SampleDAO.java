@@ -1,5 +1,5 @@
 /**
- * @author ${user}
+ * @author ${Prashanth Thipparthi}
  */
 package com.example.demo.dao;
 

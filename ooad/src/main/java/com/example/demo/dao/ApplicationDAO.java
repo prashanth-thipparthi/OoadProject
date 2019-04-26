@@ -9,7 +9,7 @@ import com.example.demo.model.Candidate;
 import com.example.demo.model.Job;
 
 /**
- * @author ${user}
+ * @author ${Prashanth Thipparthi}
  */
 
 /*
