@@ -1,3 +1,6 @@
+/**
+ * @author Amith Gopal/Prashanth Thipparthi
+ */
 package com.example.demo.controller;
 
 import java.util.ArrayList;
@@ -15,8 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dao.*;
 import com.example.demo.model.*;
 
+/*
+ * This Candidate Controller contains handling REST APIs focused on
+ * dealing with queries on the Candidate table in the database.
+ */
+
+
 @RestController
-//@ComponentScan(basePackages = {"com.example.demo.model"}, basePackageClasses = Candidate.class)
 public class CandidateController {
 	
 	@Autowired
@@ -41,7 +49,11 @@ public class CandidateController {
 	@PersistenceContext
 	public EntityManager em;
 	
-	
+	/*
+	 * A Get Request to get the list of all the candidates with a certain set of given skills. Expected parameter is a string with comma separated values of different
+	 * skills. 
+	 * Returns List of Candidates possessing at least one of the skills provided.
+	 */
 	@GetMapping("candidates")
 	public List<Candidate> getCandidates(@RequestParam("skills") String skills)
 	{

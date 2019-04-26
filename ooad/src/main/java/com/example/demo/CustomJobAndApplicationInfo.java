@@ -1,3 +1,6 @@
+/**
+ * @author Amith Gopal
+ */
 package com.example.demo;
 
 import java.util.ArrayList;
@@ -8,6 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.example.demo.model.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+/*
+ * This class is designed to accomodate information about job and application information.
+ * This class information will be later serialized by the CustomJobAndApplicationInfoSerializer class
+ */
 
 @JsonSerialize(using=CustomJobAndApplicationInfoSerializer.class)
 public class CustomJobAndApplicationInfo {

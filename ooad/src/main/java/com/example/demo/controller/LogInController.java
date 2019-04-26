@@ -1,14 +1,8 @@
+/**
+ * @author Amith Gopal/Prashanth Thipparthi
+ */
 package com.example.demo.controller;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-
-import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,14 +15,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.AddApplicationParameters;
-import com.example.demo.AddJobParameters;
 import com.example.demo.SignUpParameters;
 import com.example.demo.dao.*;
 import com.example.demo.model.*;
 
+/*
+ * This Login Controller contains handling REST APIs focused on
+ * dealing with queries on the Login, Candidate and Company tables in the database.
+ */
+
+
 @RestController
-//@ComponentScan(basePackages = {"com.example.demo.model"}, basePackageClasses = Candidate.class)
 public class LogInController {
 	
 	@Autowired
@@ -48,6 +45,11 @@ public class LogInController {
 	
 	@PersistenceContext
 	public EntityManager em;	
+	
+	/*
+	 * A Get Request for signing in to the Job Portal. Expects request parameters like username and password.
+	 * Returns either the Candidate or a Company object based on the username.
+	 */
 	
 	@GetMapping(path="/signin")
 	public Object getUser(@RequestParam("username") String username, 
@@ -75,6 +77,12 @@ public class LogInController {
 		
 		return ret;
 	}
+	
+	/*
+	 *  A Post request used to sign up either a customer or a candidate into the Job Portal. Expects parameters like username, password, flag 
+	 *  representing whether it is a candidate or a company and name.
+	 *  Returns the Login object representing the user.
+	 */
 	
 	@PostMapping(path="/signup")
 	public Login addUser(@RequestBody SignUpParameters signUp) {
@@ -114,6 +122,10 @@ public class LogInController {
 		return user;
 	}
 	
+	/*
+	 * A Delete request in order to delete a user. Expects a parameter "username".
+	 * Returns a String indicating the status of the delete operation.
+	 */
 	@DeleteMapping("/deleteUser")
 	public String deleteUser(@RequestParam("username") String username) 
 	{

@@ -1,3 +1,6 @@
+/**
+ * @author Amith Gopal
+ */
 package com.example.demo.model;
 
 import java.io.Serializable;
@@ -24,6 +27,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+
+/*
+ * This class is the Object Relational Mapper (ORM) for the jobs table in the database
+ */
 
 @XmlRootElement
 @Entity(name = "jobs")

@@ -1,3 +1,6 @@
+/**
+ * @author Akriti Kapur
+ */
 package com.example.demo;
 
 import java.io.IOException;
@@ -9,6 +12,12 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 import com.example.demo.model.*;
+
+/*
+ * The function of this class is to serialize the contents of the CustomJobAndApplicationInfo class
+ * in the form of Json representing the job information and the application information in the 
+ * form of key-value pairs
+ */
 
 public class CustomJobAndApplicationInfoSerializer extends JsonSerializer<CustomJobAndApplicationInfo> {
 

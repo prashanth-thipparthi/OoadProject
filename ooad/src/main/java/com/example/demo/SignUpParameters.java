@@ -1,4 +1,11 @@
+/**
+ * @author ${Prashanth Thipparthi}
+ */
 package com.example.demo;
+
+/*
+ * This class represents the parameters of the request body while signing up into the job portal
+ */
 
 public class SignUpParameters {
 	
@@ -6,6 +13,8 @@ public class SignUpParameters {
 	private String password;
 	private String name;
 	private boolean flag;
+	
+	/*Getters and Setters*/
 	
 	public String getUsername() {
 		return username;

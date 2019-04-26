@@ -1,0 +1,8 @@
+CREATE TABLE public.skills
+(
+skill character varying(50) NOT NULL,
+CONSTRAINT unique_skill UNIQUE (skill),
+CONSTRAINT skills_pkey PRIMARY KEY (skill)
+)WITH (
+  OIDS=FALSE
+);

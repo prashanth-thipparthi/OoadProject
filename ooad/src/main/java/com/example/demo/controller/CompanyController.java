@@ -1,3 +1,6 @@
+/**
+ * @author Amith Gopal/Prashanth Thipparthi
+ */
 package com.example.demo.controller;
 
 import java.util.ArrayList;
@@ -18,8 +21,13 @@ import com.example.demo.dao.*;
 import com.example.demo.model.Application;
 import com.example.demo.model.Job;
 
+/*
+ * This Company Controller contains handling REST APIs focused on
+ * dealing with queries on the Company table in the database.
+ */
+
+
 @RestController
-//@ComponentScan(basePackages = {"com.example.demo.model"}, basePackageClasses = Candidate.class)
 public class CompanyController {
 	
 	@Autowired
@@ -43,6 +51,12 @@ public class CompanyController {
 	
 	@PersistenceContext
 	public EntityManager em;
+	
+	/*
+	 * A Get request to get the complete list of all the jobs and the applications for each of those jobs for a requested company.
+	 * Expects a parameter "id" which is the company id.
+	 * Returns a custom created JSON containing list of all the job and it's application information for a requested company.
+	 */
 	
 	@GetMapping(path="/getJobsForCompany")
 	public List<CustomJobAndApplicationInfo> getJobsForCompany(@RequestParam("id") int id)
