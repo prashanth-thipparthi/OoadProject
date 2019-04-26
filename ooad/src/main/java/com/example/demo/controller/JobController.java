@@ -114,7 +114,7 @@ public class JobController {
 			int i;
 			String mainQuery = "FROM jobs j WHERE ";
 			for (i=0; i<requestedRoles.size()-1;i++) {
-				rolesQuery += " j.job_role='" + requestedRoles.get(i).toUpperCase() + "' OR ";
+				rolesQuery += " j.job_role='" + requestedRoles.get(i) + "' OR ";
 			}
 			rolesQuery += " j.job_role='" + requestedRoles.get(i) +"')";
 				
@@ -197,7 +197,7 @@ public class JobController {
 	@PostMapping(path="/addJob")
 	public boolean addJob(@RequestBody AddJobParameters addJobParams)
 	{
-		JobController jc = new JobController();
+		//JobController jc = new JobController();
 		
 		try {
 			
@@ -208,7 +208,7 @@ public class JobController {
 			newJob.setJobLocation(addJobParams.getLocation());
 			newJob.setJobRole(addJobParams.getRole());
 			newJob.setJobSkills(addJobParams.getSkills());
-			if (jc.addSkills(addJobParams.getSkills()) == true)
+			if (this.addSkills(addJobParams.getSkills()) == true)
 			{
 				System.out.println("The skills have been added to the skills table successfully.");
 			}
@@ -248,7 +248,7 @@ public class JobController {
 	 * Returns true if the deletion is successful else Returns false.
 	 */
 	
-	@DeleteMapping(path="/deleteJob")
+	@GetMapping(path="/deleteJob")
 	public boolean deleteJob(@RequestParam("id") long id)
 	{
 		if (jdao.existsById(id) == true)
