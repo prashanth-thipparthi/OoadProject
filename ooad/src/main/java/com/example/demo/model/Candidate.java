@@ -1,3 +1,6 @@
+/**
+ * @author Amith Gopal
+ */
 package com.example.demo.model;
 
 import java.util.List;
@@ -17,12 +20,13 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
+/*
+ * This class is the Object Relational Mapper (ORM) for the candidates table in the database
+ */
 
 @XmlRootElement
 @Entity(name = "candidates")
 @Table(name = "candidates")
-//@Component
 public class Candidate {
 	
 	@Id

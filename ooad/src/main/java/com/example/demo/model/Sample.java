@@ -1,3 +1,7 @@
+/**
+ * @author ${Prashanth Thipparthi}
+ */
+
 package com.example.demo.model;
 
 import java.util.Optional;
@@ -11,6 +15,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+
+/*
+ * This class is the Object Relational Mapper (ORM) for the Sample table in the database
+ * THIS IS JUST A DUMMY TABLE WHICH WAS USED TO DO SOME TESTING AND VALIDATION
+ */
 
 @XmlRootElement
 @Entity

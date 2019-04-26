@@ -1,3 +1,6 @@
+/**
+ * @author ${Prashanth Thipparthi}
+ */
 package com.example.demo.model;
 
 
@@ -11,11 +14,19 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+/*
+ * This class is the Object Relational Mapper (ORM) for the companies table in the database
+ */
 
 @XmlRootElement
 @Entity(name = "companies")
 @Table(name = "companies")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Company {
 
 	@Id
