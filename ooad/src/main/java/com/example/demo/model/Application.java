@@ -51,7 +51,6 @@ public class Application implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name="candidate_id")
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private Candidate candidateObj;
 	
 //	@Id

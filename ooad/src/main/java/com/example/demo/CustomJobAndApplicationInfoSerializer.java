@@ -16,7 +16,6 @@ public class CustomJobAndApplicationInfoSerializer extends JsonSerializer<Custom
 	public void serialize(CustomJobAndApplicationInfo value, JsonGenerator gen, SerializerProvider serializers)
 			throws IOException {
 		// TODO Auto-generated method stub
-		gen.writeStartArray();
 		gen.writeStartObject();
 		gen.writeNumberField("jobId", value.jobId);
 		gen.writeStringField("description", value.description);
@@ -25,7 +24,6 @@ public class CustomJobAndApplicationInfoSerializer extends JsonSerializer<Custom
 		gen.writeStringField("skills", value.skills);
 		gen.writeObjectField("apps", value.apps);
 		gen.writeEndObject();
-		gen.writeEndArray();
 	}
 
 }
