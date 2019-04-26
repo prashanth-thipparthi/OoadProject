@@ -1,4 +1,7 @@
 # Job Portal
+## Overview
+This git repository contains code of job portal web application. It is a platform geared to professionals. It enables you to network with other Professionals and look for a new job. Platform is used by Recruiters to post the jobs and Professionals who are looking for the job can update their profile in the platform and can apply jobs posted on the platform. Recruiters will be contacting shortlisted candidates through platform and continue the hiring process.
+
 
 ## Team Members
 
